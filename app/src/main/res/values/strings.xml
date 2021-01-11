@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Computer Vision</string>
+    <string name="gray_scale"> Grayscale </string>
+    <string name="BGR_2_RGB"> BGR to RGB </string>
+    <string name="BGR_2_GRB"> BRG to GRB </string>
+    <string name="cycleLeft"> left </string>
+    <string name="cycleRight"> right </string>
+</resources>

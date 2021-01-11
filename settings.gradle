@@ -1,0 +1,3 @@
+include ':app'
+rootProject.name = "Computer Vision"
+include ':opencv450'
