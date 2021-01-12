@@ -14,8 +14,9 @@ Java_com_leyline_computervision_NativeClass_bGR2RGB(JNIEnv *env, jobject thiz, j
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_leyline_computervision_NativeClass_grayScale(JNIEnv *env, jobject thiz,
+Java_com_leyline_computervision_NativeClass_grayScale(JNIEnv *env, jobject d,
                                                       jobject addr_rgba) {
     Mat &img = *(Mat *) addr_rgba;
-    cvtColor(img, img, COLOR_RGB2GRAY);
+    applyColorMap(img, img, 0);
 }
+

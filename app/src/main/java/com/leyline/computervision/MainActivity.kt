@@ -15,12 +15,9 @@ import org.opencv.android.*
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame
 import org.opencv.core.CvType
 import org.opencv.core.Mat
-import com.leyline.computervision.NativeClass.*
-
 
 
 class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
-
 
     var mRgba: Mat? = null
     var mRGBAT:Mat? = null
@@ -71,10 +68,16 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
             initializeCamera(javaCameraView, activeCamera)
         } else {
             Log.d(TAG, "Permission prompt")
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_REQUEST_CODE)
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_REQUEST_CODE)
         }
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -104,18 +107,20 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
     override fun onCameraFrame(inputFrame: CvCameraViewFrame): Mat? {
         mRgba = inputFrame.rgba()
         val nv = NativeClass();
-        if (filterType === "BGR2RGB") {
-            nv.bGR2RGB(mRgba?.nativeObjAddr)
-        } else if (filterType === "grayscale") {
+//        if (filterType === "BGR2RGB") {
             nv.grayScale(mRgba?.nativeObjAddr)
-        }
+//        } else if (filterType === "grayscale") {
+//            nv.grayScale(mRgba?.nativeObjAddr)
+//        }
         return mRgba
     }
 
     override fun onResume() {
         Log.d(TAG, "In on Resume")
         super.onResume()
-        if (!OpenCVLoader.initDebug()) {
+        val ocvLoaded = OpenCVLoader.initDebug();
+        if (ocvLoaded) {
+            Toast.makeText(this@MainActivity, "OpenCv Loadded", Toast.LENGTH_SHORT).show();
             val success = OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback)
             if (success) {
                 Log.d(TAG, "onResume: Async Init success")
@@ -123,6 +128,7 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
                 Log.d(TAG, "onResume: Async Init failure")
             }
         } else {
+            Toast.makeText( this@MainActivity, "Unable to load OpenCV", Toast.LENGTH_SHORT ).show();
             Log.d(TAG, "onResume: openCV library found inside package.")
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
         }
@@ -149,4 +155,5 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
     fun cycleBGR2RGB() {
         filterType = "BGR2RGB"
     }
+
 }
